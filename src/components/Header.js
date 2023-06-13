@@ -1,5 +1,5 @@
 import {Link} from 'react-router-dom';
-import dontgetfired from "../images/dontgetfired.jpeg"
+import dontgetfired from "../images/DGF.png"
 
 export default function Header({
     heading,

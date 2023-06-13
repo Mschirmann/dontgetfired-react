@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import Cookies from 'js-cookie'; 
 import FormAction from "./FormAction";
 import Input from "./Input";
+import { useNavigate } from "react-router-dom";
+
 
 const Login = () => {
     const [loginState,setLoginState]=useState({});
-
+    const navigate = useNavigate();
     const handleChange=(e)=>{
         setLoginState({...loginState,[e.target.id]:e.target.value})
     }
@@ -13,19 +15,10 @@ const Login = () => {
 	const handleLogin = (e) => {
     e.preventDefault();
     authenticateUser();
-		// Redirect the user to the home page or perform any other desired action
+		
+    // Redirect the user to the home page or perform any other desired action
 		alert('Login successful!');
-	};
-
-
-	const handleSignUp = (e) => {
-	  e.preventDefault();
-
-	  // Retrieve the JWT from the cookies
-	  const jwtToken = Cookies.get('jwt');
-
-	  // Use the JWT token as needed
-	  console.log('JWT Token:', jwtToken);
+    navigate("/home")
 	};
 
   const authenticateUser = () =>{
@@ -42,7 +35,8 @@ const Login = () => {
          .then(data=>{
           let jwtToken = data.token;
           // Save the JWT in the browser's cookies
-          Cookies.set('jwt', jwtToken);
+          Cookies.set('jwt', jwtToken, 30);
+
          })
          .catch(error=>console.log(error))
      
