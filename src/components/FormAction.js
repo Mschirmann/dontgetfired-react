@@ -1,6 +1,6 @@
 export default function FormAction({
     handleSubmit,
-    text
+    text,
 }){
     return(
             <button

@@ -8,7 +8,7 @@ export default function SignupPage(){
               heading="Faça seu cadastro"
               paragraph="Já possui cadastro? "
               linkName="Acesse"
-              linkUrl="/"
+              linkUrl="/signin"
             />
             <Signup/>
         </>

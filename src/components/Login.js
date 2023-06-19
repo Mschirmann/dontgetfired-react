@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 import FormAction from "./FormAction";
 import Input from "./Input";
 import { useNavigate } from "react-router-dom";
+import axios from "../utils/axios";
 
 
 const Login = () => {
@@ -15,31 +16,31 @@ const Login = () => {
 	const handleLogin = (e) => {
     e.preventDefault();
     authenticateUser();
-		
-    // Redirect the user to the home page or perform any other desired action
-		alert('Login successful!');
-    navigate("/home")
 	};
 
-  const authenticateUser = () =>{
-    console.log(JSON.stringify(loginState))    
-    const endpoint=`127.0.0.1:8000/auth/login/`;
-     fetch(endpoint,
-         {
-         method:'POST',
-         headers: {
-         'Content-Type': 'application/json'
-         },
-         body:JSON.stringify(loginState)
-         }).then(response=>response.json())
-         .then(data=>{
-          let jwtToken = data.token;
-          // Save the JWT in the browser's cookies
-          Cookies.set('jwt', jwtToken, 30);
+  const authenticateUser = async () => {
+    try {
+      const response = await axios.post('/v1/auth/login', {
+        email: loginState["email"],
+        password: loginState["password"],
+      })
+      if (response.data.user) {
+          let jwtToken = response.data.token;
+          if (jwtToken){
+            // Save the JWT in the browser's cookies
+            Cookies.set('token', jwtToken, 30);
+            axios.defaults.headers.common.Authorization = `Bearer ${jwtToken}`;
+            navigate("/")
+          } else{
+            Cookies.remove('token');
+            delete axios.defaults.headers.common.Authorization;
+          }
 
-         })
-         .catch(error=>console.log(error))
-     
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  
 }
 
    return(
@@ -47,17 +48,16 @@ const Login = () => {
        <div className="-space-y-px">
           <Input
                 handleChange={handleChange}
-                value={loginState["email-address"]}
+                value={loginState["email"]}
                 labelText="Email address"
                 labelFor="email-address"
-                id="email-address"
+                id="email"
                 name="email"
                 type="email"
                 isRequired={true}
                 placeholder={"Informe seu e-mail"}
           />
           <Input
-
                 handleChange={handleChange}
                 value={loginState["password"]}
                 labelText="Password"
