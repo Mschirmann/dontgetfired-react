@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { signupFields } from "../constants"
 import FormAction from "./FormAction";
 import Input from "./Input";
+import instance from '../utils/axios';
 
 const fields=signupFields;
 let fieldsState={};
@@ -17,13 +18,24 @@ export default function Signup(){
     e.preventDefault();
     console.log(signupState)
     createAccount()
-
     
+  }
+  const user = {
+    name: "Teste",
+    lastName: "Test2",
+    email: "e@email.com",
+    password: "12345"
   }
 
   //handle Signup API Integration here
   const createAccount=()=>{
+    instance.post('/api/user', {user}).then(
+      res => {
+        console.log(res);
+      }
+    )
     console.log("usuário criado com sucesso");
+
   }
 
     return(
